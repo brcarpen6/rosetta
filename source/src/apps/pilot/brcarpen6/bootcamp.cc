@@ -8,9 +8,42 @@
 // (c) addressed to University of Washington UW TechTransfer, email: license@u.washington.edu.
 
 #include <iostream>
+// devel headers
+#include <devel/init.hh>
+
+// protocol headers
+#include <protocols/jd2/JobDistributor.hh>
+// #include <protocols/bootcamp/BootcampMover.hh>
+
+// utility headers
+#include <utility/excn/Exceptions.hh>
+
+// basic headers
+#include <basic/Tracer.hh>
+#include <basic/options/keys/in.OptionKeys.gen.hh>
+#include <basic/options/option.hh>
+#include <basic/options/keys/OptionKeys.hh>
+#include <utility/options/OptionCollection.hh>
+#include <basic/options/option_macros.hh>
 using namespace std;
-int main() {
+
+int main(int argc, char ** argv) {
     cout << "Hello world!!" << endl;
-    return 0;
+
+    devel::init (argc, argv);
+
+    utility::vector1<string> filenames = basic::options::option[
+    basic::options::OptionKeys::in::file::s ].value();
+
+    if (filenames.size() > 0) {
+        cout << "You entered: " << filenames[ 1 ] << "as the PDB file to be read" << endl;   
+    } else{
+        cout << "You didn't provide a PDB file with the -in::file::s option" << endl;
+        return 1;
+    }
+
+        
+
+    
 
 }
