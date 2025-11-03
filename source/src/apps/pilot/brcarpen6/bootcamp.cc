@@ -30,10 +30,15 @@
 #include <core/import_pose/import_pose.hh>
 #include <core/types.hh>
 #include <utility/pointer/owning_ptr.hh>
+#include <core/scoring/ScoreFunction.hh>
+#include <core/scoring/ScoreFunctionFactory.hh>
 
 using namespace std;
 using namespace core::import_pose;
 using namespace core::pose;
+using namespace core::scoring;
+
+static basic::Tracer TR( "bootcamp" );
 
 int main(int argc, char ** argv) {
     cout << "Hello world!!" << endl;
@@ -51,6 +56,12 @@ int main(int argc, char ** argv) {
     }
 
     PoseOP mypose = pose_from_file(filenames[1]);
+
+    ScoreFunctionOP sfxn = get_score_function();
+
+    core::Real score = sfxn -> score ( *mypose );
+
+    TR << "Total score for pose: " << score << endl;
 
         
 
