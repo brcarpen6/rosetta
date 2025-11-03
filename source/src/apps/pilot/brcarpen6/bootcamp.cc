@@ -32,11 +32,16 @@
 #include <utility/pointer/owning_ptr.hh>
 #include <core/scoring/ScoreFunction.hh>
 #include <core/scoring/ScoreFunctionFactory.hh>
+#include <numeric/random/random.hh>
+#include <protocols/moves/MonteCarlo.hh>
+
 
 using namespace std;
 using namespace core::import_pose;
 using namespace core::pose;
 using namespace core::scoring;
+using namespace numeric::random;
+using namespace protocols::moves;
 
 static basic::Tracer TR( "bootcamp" );
 
@@ -59,9 +64,33 @@ int main(int argc, char ** argv) {
 
     ScoreFunctionOP sfxn = get_score_function();
 
-    core::Real score = sfxn -> score ( *mypose );
+    MonteCarlo mc(*mypose, *sfxn, 1.0);
 
-    TR << "Total score for pose: " << score << endl;
+    for(int i = 1; i <= 100; ++i){
+        
+
+        double uniform_random_number = uniform();
+        core::Size N = mypose->size();
+        core::Size randres = static_cast<core::Size> (uniform_random_number * N + 1);
+        core::Real pert1 = gaussian();
+        core::Real pert2 = gaussian();
+        core::Real orig_phi = mypose->phi( randres );
+        core::Real orig_psi = mypose->psi( randres );
+
+        mypose->set_phi( randres, orig_phi + pert1);
+        mypose->set_psi( randres, orig_psi + pert1);
+
+        core::Real score = sfxn -> score ( *mypose );
+
+        mc.boltzmann(*mypose);
+
+        TR << "Cycle: " << i << " score: " << score << " best: " << mc.lowest_score() << endl;
+    }
+
+    
+
+
+
 
         
 
