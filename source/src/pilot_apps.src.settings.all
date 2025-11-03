@@ -137,6 +137,10 @@ sources = {
 		#"nrg_res_set",
 		#"sel_hbonds",
 	],
+	"pilot/brcarpen6" : [
+		"bootcamp_jd2",
+		"bootcamp",
+	],
 	"pilot/bcorreia" : [
 		#"iterative_design", # /* Correia,Documentation Location,Demo Location */
 		#"fold_from_loops", # /* Correia,Documentation Location,Demo Location */
