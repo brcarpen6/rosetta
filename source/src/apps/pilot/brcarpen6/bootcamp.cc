@@ -25,7 +25,15 @@
 #include <basic/options/keys/OptionKeys.hh>
 #include <utility/options/OptionCollection.hh>
 #include <basic/options/option_macros.hh>
+// Rosetta headers
+#include <core/pose/Pose.hh>
+#include <core/import_pose/import_pose.hh>
+#include <core/types.hh>
+#include <utility/pointer/owning_ptr.hh>
+
 using namespace std;
+using namespace core::import_pose;
+using namespace core::pose;
 
 int main(int argc, char ** argv) {
     cout << "Hello world!!" << endl;
@@ -41,6 +49,8 @@ int main(int argc, char ** argv) {
         cout << "You didn't provide a PDB file with the -in::file::s option" << endl;
         return 1;
     }
+
+    PoseOP mypose = pose_from_file(filenames[1]);
 
         
 
