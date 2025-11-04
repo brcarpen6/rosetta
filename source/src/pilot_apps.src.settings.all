@@ -138,7 +138,7 @@ sources = {
 		#"sel_hbonds",
 	],
 	"pilot/brcarpen6" : [
-		"bootcamp_jd2",
+		#"bootcamp_jd2",
 		"bootcamp",
 	],
 	"pilot/bcorreia" : [

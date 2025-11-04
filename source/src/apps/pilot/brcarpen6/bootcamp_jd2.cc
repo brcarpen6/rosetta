@@ -16,7 +16,7 @@
 
 // protocol headers
 #include <protocols/jd2/JobDistributor.hh>
-#include <protocols/bootcamp/BootcampMover.hh>
+// #include <protocols/bootcamp/BootcampMover.hh>
 
 // utility headers
 #include <utility/excn/Exceptions.hh>
