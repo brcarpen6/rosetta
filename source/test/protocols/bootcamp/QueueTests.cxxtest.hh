@@ -25,6 +25,7 @@
 // Core Headers
 #include <core/pose/Pose.hh>
 #include <core/import_pose/import_pose.hh>
+#include <utility/excn/Exceptions.hh>
 
 // Utility, etc Headers
 #include <basic/Tracer.hh>
@@ -64,27 +65,35 @@ public:
 
 	void test_Queue(){
 
-		TS_TRACE("Start empty");
+		//The Queue Begins Empty
 		TS_ASSERT_EQUALS(test_queue.is_empty(), true);
 
 		test_queue.enqueue("1");
 		test_queue.enqueue("2");
 		test_queue.enqueue("3");
 
-		TS_TRACE("end full");
-
+		
+		// The Queue has the number of elements that I added
 		TS_ASSERT_EQUALS(test_queue.size(), 3);
 
-		TS_TRACE("dequeue in correct order");
-
+		
+		// The dequeue functions removes elements in the correct order
 		TS_ASSERT_EQUALS(test_queue.dequeue(), "1");
 		TS_ASSERT_EQUALS(test_queue.dequeue(), "2");
 		TS_ASSERT_EQUALS(test_queue.dequeue(), "3");
 
-		
-		TS_TRACE("end empty");
-
+		// The queue ends empty
 		TS_ASSERT_EQUALS(test_queue.is_empty(), true);
+
+
+		//// Other Edge Cases ////
+
+		// Cannot dequeue an empty queue
+		TS_ASSERT_THROWS(test_queue.dequeue(), utility::excn::Exception);
+
+
+
+
 
 	
 
