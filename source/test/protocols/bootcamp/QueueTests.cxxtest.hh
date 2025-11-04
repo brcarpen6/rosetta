@@ -62,31 +62,20 @@ public:
 
 	}
 
-	void test_enqueue(){
-		TS_TRACE("Start Empty");
+	void test_Queue(){
 
+		TS_TRACE("Start empty");
 		TS_ASSERT_EQUALS(test_queue.is_empty(), true);
 
-		TS_TRACE("Correct number of elements added");
 		test_queue.enqueue("1");
 		test_queue.enqueue("2");
 		test_queue.enqueue("3");
 
-		TS_ASSERT_EQUALS(test_queue.size(), 3);
-
-		
-	}
-
-	void test_dequeue(){
-		TS_TRACE("Start full");
-		test_queue.enqueue("1");
-		test_queue.enqueue("2");
-		test_queue.enqueue("3");
+		TS_TRACE("end full");
 
 		TS_ASSERT_EQUALS(test_queue.size(), 3);
 
 		TS_TRACE("dequeue in correct order");
-
 
 		TS_ASSERT_EQUALS(test_queue.dequeue(), "1");
 		TS_ASSERT_EQUALS(test_queue.dequeue(), "2");
