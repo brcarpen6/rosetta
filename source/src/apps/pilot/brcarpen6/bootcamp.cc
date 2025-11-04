@@ -8,6 +8,7 @@
 // (c) addressed to University of Washington UW TechTransfer, email: license@u.washington.edu.
 
 #include <iostream>
+#include <numeric>
 // devel headers
 #include <devel/init.hh>
 
@@ -86,7 +87,9 @@ int main(int argc, char ** argv) {
     the_observer -> pymol().apply(*mypose);
 
     Pose copy_pose = *mypose;
-
+    int accepted_count = 0;
+    int rejected_count = 0;
+    vector<int> energies;
     for(int i = 1; i <= 10; ++i){
         
 
@@ -111,11 +114,27 @@ int main(int argc, char ** argv) {
 
         core::Real score = sfxn -> score ( *mypose );
 
+        energies.push_back(score) ;
 
-        mc.boltzmann(*mypose);
+
+        bool accept = mc.boltzmann(*mypose);
+
+        if(accept){
+            accepted_count++;
+        } else{
+            rejected_count++;
+        }
 
         TR << "Cycle: " << i << " score: " << score << " best: " << mc.lowest_score() << endl;
     }
+    
+    double average = static_cast<double>(std::accumulate(energies.begin(), energies.end(), 0)) / energies.size();
+    double accepted_rate = accepted_count / 10.0; 
+    double rejected_rate = rejected_count / 10.0; 
+
+    TR << "Accepted Rate: " << accepted_rate << endl;
+    TR << "Recjected Rate: " << rejected_rate << endl;
+    TR << "Average Energy: " << average << endl;
 
     
 
