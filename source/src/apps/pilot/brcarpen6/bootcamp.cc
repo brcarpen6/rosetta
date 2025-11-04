@@ -34,6 +34,14 @@
 #include <core/scoring/ScoreFunctionFactory.hh>
 #include <numeric/random/random.hh>
 #include <protocols/moves/MonteCarlo.hh>
+#include <protocols/moves/PyMOLMover.hh>
+#include <core/pack/task/PackerTask.hh>
+#include <core/pack/task/TaskFactory.hh>
+#include <core/pack/pack_rotamers.hh>
+#include <core/pack/task/operation/TaskOperations.hh>
+#include <core/kinematics/MoveMap.hh>
+#include <core/optimization/AtomTreeMinimizer.hh>
+#include <core/optimization/MinimizerOptions.hh>
 
 
 using namespace std;
@@ -42,6 +50,7 @@ using namespace core::pose;
 using namespace core::scoring;
 using namespace numeric::random;
 using namespace protocols::moves;
+using namespace core::pack::task;
 
 static basic::Tracer TR( "bootcamp" );
 
@@ -64,9 +73,21 @@ int main(int argc, char ** argv) {
 
     ScoreFunctionOP sfxn = get_score_function();
 
+    core::kinematics::MoveMap mm;
+    mm.set_bb(true);
+    mm.set_chi(true);
+
+    core::optimization::MinimizerOptions min_opts( "lbfgs_armijo_atol", 0.01, true );
+    core::optimization::AtomTreeMinimizer atm;
+
     MonteCarlo mc(*mypose, *sfxn, 1.0);
 
-    for(int i = 1; i <= 100; ++i){
+    PyMOLObserverOP the_observer = AddPyMOLObserver( *mypose, true, 0);
+    the_observer -> pymol().apply(*mypose);
+
+    Pose copy_pose = *mypose;
+
+    for(int i = 1; i <= 10; ++i){
         
 
         double uniform_random_number = uniform();
@@ -80,7 +101,16 @@ int main(int argc, char ** argv) {
         mypose->set_phi( randres, orig_phi + pert1);
         mypose->set_psi( randres, orig_psi + pert1);
 
+        PackerTaskOP repack_task = TaskFactory::create_packer_task(*mypose);
+        repack_task-> restrict_to_repacking();
+        core::pack::pack_rotamers(*mypose, *sfxn, repack_task);
+
+        copy_pose = *mypose;
+        atm.run( copy_pose, mm, *sfxn, min_opts );
+        *mypose = copy_pose;
+
         core::Real score = sfxn -> score ( *mypose );
+
 
         mc.boltzmann(*mypose);
 
