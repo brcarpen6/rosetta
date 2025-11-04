@@ -32,6 +32,7 @@
 #include <core/pack/dunbrack/DunbrackRotamer.hh>
 
 
+using namespace std;
 using namespace protocols::match;
 using namespace protocols::match::upstream;
 
@@ -59,6 +60,93 @@ public:
 	void test_hello_world(){
 		TS_ASSERT(true);
 	}
+
+	utility::vector1< std::pair< core::Size, core::Size > >
+	identify_secondary_structure_spans( std::string const & ss_string )
+	{
+	utility::vector1< std::pair< core::Size, core::Size > > ss_boundaries;
+	core::Size strand_start = -1;
+	for ( core::Size ii = 0; ii < ss_string.size(); ++ii ) {
+		if ( ss_string[ ii ] == 'E' || ss_string[ ii ] == 'H'  ) {
+		if ( int( strand_start ) == -1 ) {
+			strand_start = ii;
+		} else if ( ss_string[ii] != ss_string[strand_start] ) {
+			ss_boundaries.push_back( std::make_pair( strand_start+1, ii ) );
+			strand_start = ii;
+		}
+		} else {
+		if ( int( strand_start ) != -1 ) {
+			ss_boundaries.push_back( std::make_pair( strand_start+1, ii ) );
+			strand_start = -1;
+		}
+		}
+	}
+	if ( int( strand_start ) != -1 ) {
+		// last residue was part of a ss-eleemnt                                                                                                                                
+		ss_boundaries.push_back( std::make_pair( strand_start+1, ss_string.size() ));
+	}
+	for ( core::Size ii = 1; ii <= ss_boundaries.size(); ++ii ) {
+		std::cout << "SS Element " << ii << " from residue "
+		<< ss_boundaries[ ii ].first << " to "
+		<< ss_boundaries[ ii ].second << std::endl;
+	}
+	return ss_boundaries;
+	}
+
+	void test_identify_secondary_structure_spans(){
+
+		string test_string1 = "   EEEEE   HHHHHHHH  EEEEE   IGNOR EEEEEE   HHHHHHHHHHH  EEEEE  HHHH   ";
+		utility::vector1< std::pair< core::Size, core::Size > > expected_output1;
+		expected_output1.push_back( std::make_pair( 4, 8 ) );
+		expected_output1.push_back( std::make_pair( 12, 19 ) );
+		expected_output1.push_back( std::make_pair( 22, 26 ) );
+		expected_output1.push_back( std::make_pair( 36, 41 ) );
+		expected_output1.push_back( std::make_pair( 45, 55 ) );
+		expected_output1.push_back( std::make_pair( 58, 62 ) );
+		expected_output1.push_back( std::make_pair( 65, 68 ) );
+
+		utility::vector1< std::pair< core::Size, core::Size > > spans_1 = identify_secondary_structure_spans(test_string1);
+
+		TS_ASSERT_EQUALS(spans_1,expected_output1)
+
+		string test_string2 = "HHHHHHH   HHHHHHHHHHHH      HHHHHHHHHHHHEEEEEEEEEEHHHHHHH EEEEHHH ";
+		utility::vector1< std::pair< core::Size, core::Size > > expected_output2;
+		expected_output1.push_back( std::make_pair( 1, 7 ) );
+		expected_output1.push_back( std::make_pair( 11, 22 ) );
+		expected_output1.push_back( std::make_pair( 29, 40 ) );
+		expected_output1.push_back( std::make_pair( 41, 50 ) );
+		expected_output1.push_back( std::make_pair( 51, 57 ) );
+		expected_output1.push_back( std::make_pair( 59, 62 ) );
+		expected_output1.push_back( std::make_pair( 63, 65 ) );
+
+		utility::vector1< std::pair< core::Size, core::Size > > spans_2 = identify_secondary_structure_spans(test_string2);
+
+		TS_ASSERT_EQUALS(spans_2,expected_output2)
+
+		string test_string3 = "EEEEEEEEE EEEEEEEE EEEEEEEEE H EEEEE H H H EEEEEEEE";
+		utility::vector1< std::pair< core::Size, core::Size > > expected_output3;
+		expected_output1.push_back( std::make_pair( 1, 9 ) );
+		expected_output1.push_back( std::make_pair( 11, 18 ) );
+		expected_output1.push_back( std::make_pair( 20, 28 ) );
+		expected_output1.push_back( std::make_pair( 30, 30 ) );
+		expected_output1.push_back( std::make_pair( 32, 36 ) );
+		expected_output1.push_back( std::make_pair( 38, 38 ) );
+		expected_output1.push_back( std::make_pair( 40, 40 ) );
+		expected_output1.push_back( std::make_pair( 42, 42 ) );
+		expected_output1.push_back( std::make_pair( 44, 51 ) );
+
+		utility::vector1< std::pair< core::Size, core::Size > > spans_3 = identify_secondary_structure_spans(test_string3);
+
+		TS_ASSERT_EQUALS(spans_3,expected_output3)
+
+
+	}
+
+	
+
+
+
+
 
 
 
