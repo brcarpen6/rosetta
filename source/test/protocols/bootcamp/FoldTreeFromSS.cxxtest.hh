@@ -31,6 +31,7 @@
 #include <core/kinematics/FoldTree.hh>
 #include <core/pose/Pose.hh>
 #include <core/kinematics/Edge.hh>
+#include <protocols/bootcamp/fold_tree_from_ss.hh>
 
 // C++ headers
 
@@ -70,37 +71,6 @@ public:
 		TS_ASSERT(true);
 	}
 
-	utility::vector1< std::pair< core::Size, core::Size > >
-	identify_secondary_structure_spans( std::string const & ss_string )
-	{
-	utility::vector1< std::pair< core::Size, core::Size > > ss_boundaries;
-	core::Size strand_start = -1;
-	for ( core::Size ii = 0; ii < ss_string.size(); ++ii ) {
-		if ( ss_string[ ii ] == 'E' || ss_string[ ii ] == 'H'  ) {
-		if ( int( strand_start ) == -1 ) {
-			strand_start = ii;
-		} else if ( ss_string[ii] != ss_string[strand_start] ) {
-			ss_boundaries.push_back( std::make_pair( strand_start+1, ii ) );
-			strand_start = ii;
-		}
-		} else {
-		if ( int( strand_start ) != -1 ) {
-			ss_boundaries.push_back( std::make_pair( strand_start+1, ii ) );
-			strand_start = -1;
-		}
-		}
-	}
-	if ( int( strand_start ) != -1 ) {
-		// last residue was part of a ss-eleemnt                                                                                                                                
-		ss_boundaries.push_back( std::make_pair( strand_start+1, ss_string.size() ));
-	}
-	for ( core::Size ii = 1; ii <= ss_boundaries.size(); ++ii ) {
-		std::cout << "SS Element " << ii << " from residue "
-		<< ss_boundaries[ ii ].first << " to "
-		<< ss_boundaries[ ii ].second << std::endl;
-	}
-	return ss_boundaries;
-	}
 
 	void test_identify_secondary_structure_spans(){
 
@@ -114,7 +84,7 @@ public:
 		expected_output1.push_back( std::make_pair( 58, 62 ) );
 		expected_output1.push_back( std::make_pair( 65, 68 ) );
 
-		utility::vector1< std::pair< core::Size, core::Size > > spans_1 = identify_secondary_structure_spans(test_string1);
+		utility::vector1< std::pair< core::Size, core::Size > > spans_1 = protocols::bootcamp::identify_secondary_structure_spans(test_string1);
 
 		TS_ASSERT_EQUALS(spans_1,expected_output1)
 
@@ -128,7 +98,7 @@ public:
 		expected_output2.push_back( std::make_pair( 59, 62 ) );
 		expected_output2.push_back( std::make_pair( 63, 65 ) );
 
-		utility::vector1< std::pair< core::Size, core::Size > > spans_2 = identify_secondary_structure_spans(test_string2);
+		utility::vector1< std::pair< core::Size, core::Size > > spans_2 = protocols::bootcamp::identify_secondary_structure_spans(test_string2);
 
 		TS_ASSERT_EQUALS(spans_2,expected_output2)
 
@@ -144,106 +114,12 @@ public:
 		expected_output3.push_back( std::make_pair( 42, 42 ) );
 		expected_output3.push_back( std::make_pair( 44, 51 ) );
 
-		utility::vector1< std::pair< core::Size, core::Size > > spans_3 = identify_secondary_structure_spans(test_string3);
+		utility::vector1< std::pair< core::Size, core::Size > > spans_3 = protocols::bootcamp::identify_secondary_structure_spans(test_string3);
 
 		TS_ASSERT_EQUALS(spans_3,expected_output3)
 
 
 	}
-
-	FoldTree fold_tree_from_ss(Pose const & pose){
-		core::scoring::dssp::Dssp dssp( pose );
-		string ss = dssp.get_dssp_secstruct();
-		return fold_tree_from_dssp_string( ss );
-	} 
-
-	FoldTree fold_tree_from_dssp_string(string const & ss){
-
-		FoldTree ft;
-		core::Size const N = ss.size();
-
-		TR << N << endl;
-
-		// ft.simple_tree( N );
-		
-		utility::vector1< std::pair< core::Size, core::Size > > spans = identify_secondary_structure_spans(ss);
-		
-		// // First span and its midpoint (our root res)
-		core::Size const sse1_start = spans[1].first;
-		core::Size const sse1_end = spans[1].second;
-		core::Size const rootpoint = (sse1_start + sse1_end)/2;
-
-		TR << "first sse begin " << sse1_start << endl;
-		TR << "first sse end " << sse1_end << endl;
-		TR << "rootpoint " <<rootpoint << endl;
-
-
-		ft.add_edge(rootpoint, 1, Edge::PEPTIDE);
-		ft.add_edge(rootpoint, sse1_end , Edge::PEPTIDE);
-
-		TR << "start ft " << ft << endl;
-		
-		int num_jump=1;
-		for ( core::Size i = 2; i <= spans.size(); ++i ) {
-
-			// TR << "start loop " << i << endl;
-
-
-			// Define all points
-			// each consecutive sse with cutpoint and jump edge to midpoint of sse and gaps
-			core::Size const sse_i_start = spans[i].first;
-			core::Size const sse_i_end = spans[i].second;
-			core::Size const midpoint_i_sse = (sse_i_start + sse_i_end)/2;
-
-			//loops
-			// between sse
-			core::Size const gap_start = spans[i-1].second;
-
-			
-			core::Size const gap_end = spans[i].first;
-			core::Size const midpoint_gap = (gap_start + gap_end)/2;
-			
-
-
-			core::Size const loop_start = gap_start + 1;
-			core::Size const loop_end = gap_end - 1;
-
-	
-			// TR << ft.cutpoint( gap_start ) << endl;
-			TR << "Set up all points" << endl;
-
-			ft.add_edge(rootpoint, midpoint_gap , num_jump++);
-
-			ft.add_edge(midpoint_gap, loop_start, Edge::PEPTIDE);
-
-		
-			ft.add_edge(midpoint_gap, loop_end, Edge::PEPTIDE);
-
-			ft.add_edge(rootpoint, midpoint_i_sse, num_jump++);
-
-			ft.add_edge(midpoint_i_sse, sse_i_start, Edge::PEPTIDE);
-
-			if(i == spans.size()){
-				ft.add_edge(midpoint_i_sse, N, Edge::PEPTIDE);
-				TR << "add peptide 6" << endl;
-
-			}else{
-				ft.add_edge(midpoint_i_sse, sse_i_end, Edge::PEPTIDE);
-				TR << "add peptide 6" << endl;
-			}
-
-			
-
-			// TR << "end loop" << i << endl;
-			// TR << "current ft " << ft << endl;
-			
-		}
-
-		return ft;
-	}	
-
-	
-
 
 		
 	
@@ -251,7 +127,7 @@ public:
 		
 		string test_string_ft = "   EEEEEEE    EEEEEEE         EEEEEEEEE    EEEEEEEEEE   HHHHHH         EEEEEEEEE         EEEEE     ";
 
-		FoldTree ft = fold_tree_from_dssp_string(test_string_ft);
+		FoldTree ft = protocols::bootcamp::fold_tree_from_dssp_string(test_string_ft);
 		TS_ASSERT( ft.check_fold_tree() );
 
 		TR << ft << endl;
