@@ -174,7 +174,7 @@ public:
 	inline
 	const_iterator
 	end() const
-	{
+	{ 
 		return edge_list_.end();
 	}
 
