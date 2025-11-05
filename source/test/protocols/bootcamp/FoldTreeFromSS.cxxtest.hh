@@ -187,6 +187,8 @@ public:
 
 		FoldTree ft = fold_tree_from_dssp_string(test_string_ft );
 		TS_ASSERT_EQUALS(ft.size(),38);
+		TS_ASSERT_EQUALS(ft.num_jump(),12);
+		TS_ASSERT_EQUALS(ft.nres(),test_string_ft.length());
 
 	}
  
