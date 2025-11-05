@@ -20,11 +20,14 @@
 
 #include <test/util/pose_funcs.hh>
 #include <test/core/init_util.hh>
+#include <core/scoring/dssp/Dssp.hh>
 
 // Utility headers
 
 /// Project headers
 #include <core/types.hh>
+#include <core/kinematics/FoldTree.hh>
+#include <core/pose/Pose.hh>
 
 // C++ headers
 
@@ -35,6 +38,9 @@
 using namespace std;
 using namespace protocols::match;
 using namespace protocols::match::upstream;
+using namespace core::kinematics;
+using namespace core::scoring;
+using namespace core::pose;
 
 
 // --------------- Test Class --------------- //
@@ -142,12 +148,47 @@ public:
 
 	}
 
+	FoldTree fold_tree_from_ss(Pose const & pose){
+		core::scoring::dssp::Dssp dssp( pose );
+		string ss = dssp.get_dssp_secstruct();
+		return fold_tree_from_dssp_string( ss );
+	} 
+
+	FoldTree fold_tree_from_dssp_string(string const & ss){
+
+		FoldTree ft;
+
+		core::Size const n = ss.size();
+
+		if ( n == 0 ) return ft;
+
+
+		utility::vector1< std::pair< core::Size, core::Size > > const spans = identify_secondary_structure_spans( ss );
+		for ( core::Size i = 1; i + 1 <= spans.size(); ++i ) {
+			core::Size const firstspan_start = spans[i].first;
+			core::Size const firstspan_end = spans[i].second;
+			core::Size const secondspan_start = spans[i+1].first;
+			core::Size const secondspan_end = spans[i+1].second;
+
+			ft.add_edge(firstspan_start, firstspan_end, Edge::PEPTIDE);
+
+			core::Size const cutpoint = ( firstspan_end + secondspan_start ) / 2;
+
+			ft.new_jump( firstspan_end, secondspan_start, cutpoint );
+		}
+	return ft;
+
+	}
+
 	
+	
+	void test_fold_tree_from_dssp_string(){
+		string test_string_ft = "   EEEEEEE    EEEEEEE         EEEEEEEEE    EEEEEEEEEE   HHHHHH         EEEEEEEEE         EEEEE     ";
 
+		FoldTree ft = fold_tree_from_dssp_string(test_string_ft );
+		TS_ASSERT_EQUALS(ft.size(),38);
 
-
-
-
-
+	}
+ 
 
 };
