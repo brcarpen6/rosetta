@@ -157,131 +157,94 @@ public:
 		return fold_tree_from_dssp_string( ss );
 	} 
 
-	// FoldTree fold_tree_from_dssp_string(string const & ss){
-
-	// 	FoldTree ft;
-
-	// 	utility::vector1< std::pair< core::Size, core::Size > > spans = identify_secondary_structure_spans(ss);
-	// 	for ( core::Size i = 1; i + 1 <= spans.size(); ++i ) {
-	// 		for (core::Size j = 1; j + 1 <= spans.size(); ++j ){
-	// 			if (i < j && i!=j){
-	// 				core::Size const firstspan_start = spans[i].first;
-	// 				core::Size const firstspan_end = spans[i].second;
-	// 				core::Size const secondspan_start = spans[j].first;
-	// 				core::Size const secondspan_end = spans[j].second;
-
-	// 				core::Size const mid_span_i = (firstspan_start + firstspan_end)/2;
-	// 				core::Size const mid_span_j = (secondspan_start + secondspan_end)/2;
-
-	// 				core::Size const cutpoint_ij_midspans = (firstspan_end + secondspan_start)/2;
-	// 				core::Size const cutpoint_ij_midloops = (firstspan_end + cutpoint_ij_midspans)/2;
-
-	// 				ft.new_jump(mid_span_i, mid_span_j, cutpoint_ij_midspans);
-	// 				ft.new_jump(mid_span_i, cutpoint_ij_midspans, cutpoint_ij_midloops);
-
-	// 				ft.add_edge(mid_span_i, firstspan_end, Edge::PEPTIDE);
-	// 				ft.add_edge(mid_span_i, firstspan_start, Edge::PEPTIDE);
-
-
-
-	// 			}
-	// 		}
-
-	// 	}
-
-	FoldTree fold_tree_from_dssp_string(string const & ss) {
+	FoldTree fold_tree_from_dssp_string(string const & ss){
 
 		FoldTree ft;
 		core::Size const N = ss.size();
 
-		// 1. Initial Setup: Create a linear FoldTree spanning all residues.
-		ft.simple_tree(N);
+		TR << N << endl;
 
-		utility::vector1< std::pair< core::Size, core::Size > > sse_spans = identify_secondary_structure_spans(ss);
+		// ft.simple_tree( N );
 		
-		// Handle the trivial case
-		if ( sse_spans.empty() ) return ft;
+		utility::vector1< std::pair< core::Size, core::Size > > spans = identify_secondary_structure_spans(ss);
 		
+		// // First span and its midpoint (our root res)
+		core::Size const sse1_start = spans[1].first;
+		core::Size const sse1_end = spans[1].second;
+		core::Size const rootpoint = (sse1_start + sse1_end)/2;
+
+		TR << "first sse begin " << sse1_start << endl;
+		TR << "first sse end " << sse1_end << endl;
+		TR << "rootpoint " <<rootpoint << endl;
+
+
+		ft.add_edge(rootpoint, 1, Edge::PEPTIDE);
+		ft.add_edge(rootpoint, sse1_end , Edge::PEPTIDE);
+
+		TR << "start ft " << ft << endl;
 		
-		// --- Anchor Definition (SSE 1) ---
-		core::Size const anchor_start = sse_spans[1].first;
-		core::Size const anchor_end = sse_spans[1].second;
-		core::Size const anchor_center = (anchor_start + anchor_end) / 2;
-		
-		// --- Helper function for adding an element to the tree (Jump + Edges) ---
-		auto add_element_to_tree = [&](core::Size current_start, core::Size current_end) {
+		int num_jump=1;
+		for ( core::Size i = 2; i <= spans.size(); ++i ) {
+
+			// TR << "start loop " << i << endl;
+
+
+			// Define all points
+			// each consecutive sse with cutpoint and jump edge to midpoint of sse and gaps
+			core::Size const sse_i_start = spans[i].first;
+			core::Size const sse_i_end = spans[i].second;
+			core::Size const midpoint_i_sse = (sse_i_start + sse_i_end)/2;
+
+			//loops
+			// between sse
+			core::Size const gap_start = spans[i-1].second;
+
 			
-			core::Size const current_center = (current_start + current_end) / 2;
+			core::Size const gap_end = spans[i].first;
+			core::Size const midpoint_gap = (gap_start + gap_end)/2;
 			
-			// Skip the anchor element
-			if ( current_center == anchor_center ) return; 
 
-			// --- Cutpoint Calculation (Simplified & Robust) ---
-			// Choose the cutpoint between anchor_end and current_start.
-			// This is safe for non-overlapping sequential elements.
-			core::Size cutpoint = ( anchor_end + current_start ) / 2;
 
-			// **CRITICAL ROBUSTNESS CHECK**
-			// If the calculated cutpoint is invalid (<= 0 or >= N), fix it.
-			// This occurs for loops at the C-terminus or overlapping segments.
-			if ( cutpoint <= 0 || cutpoint >= N ) { 
-				// Choose the next residue after the segment furthest down the chain, 
-				// then cap at the highest valid cutpoint: N - 1.
-				cutpoint = std::max( anchor_end, current_end ) + 1;
+			core::Size const loop_start = gap_start + 1;
+			core::Size const loop_end = gap_end - 1;
 
-				if ( cutpoint >= N ) {
-					cutpoint = N - 1; 
-				}
+	
+			// TR << ft.cutpoint( gap_start ) << endl;
+			TR << "Set up all points" << endl;
+
+			ft.add_edge(rootpoint, midpoint_gap , num_jump++);
+
+			ft.add_edge(midpoint_gap, loop_start, Edge::PEPTIDE);
+
+		
+			ft.add_edge(midpoint_gap, loop_end, Edge::PEPTIDE);
+
+			ft.add_edge(rootpoint, midpoint_i_sse, num_jump++);
+
+			ft.add_edge(midpoint_i_sse, sse_i_start, Edge::PEPTIDE);
+
+			if(i == spans.size()){
+				ft.add_edge(midpoint_i_sse, N, Edge::PEPTIDE);
+				TR << "add peptide 6" << endl;
+
+			}else{
+				ft.add_edge(midpoint_i_sse, sse_i_end, Edge::PEPTIDE);
+				TR << "add peptide 6" << endl;
 			}
-			// ----------------------------------------------------
+
 			
+
+			// TR << "end loop" << i << endl;
+			// TR << "current ft " << ft << endl;
 			
-			// 1. Add the Jump (This is what triggers the reorder/check)
-			// It removes the peptide bond (cutpoint <-> cutpoint + 1)
-			ft.new_jump( current_center, anchor_center, cutpoint );
-
-			// 2. REQUIRED FIX: Re-establish peptide edges for the new segment.
-			// A segment defined by a jump must be spanned by edges.
-			ft.add_edge(current_center, current_end, core::kinematics::Edge::PEPTIDE);
-			ft.add_edge(current_center, current_start, core::kinematics::Edge::PEPTIDE);
-		};
-
-
-		// --- 2. Add all subsequent SSEs (i=2 to end) ---
-		for ( core::Size i = 2; i <= sse_spans.size(); ++i ) {
-			core::Size const start = sse_spans[i].first;
-			core::Size const end = sse_spans[i].second;
-			add_element_to_tree(start, end);
 		}
-		
-		
-		// --- 3. Add all Loops (connecting segments) ---
-		for ( core::Size i = 1; i < sse_spans.size(); ++i ) {
-			
-			core::Size const loop_start = sse_spans[i].second + 1;
-			core::Size const loop_end = sse_spans[i+1].first - 1;
-
-			// Only add the loop if it has at least one residue (start <= end)
-			if ( loop_start <= loop_end ) {
-				add_element_to_tree(loop_start, loop_end);
-			}
-		}
-		
-		// --- 4. Add the final loop to the C-terminus (if any) ---
-		// If the last SSE is not N, the remaining tail is a loop.
-		core::Size const last_sse_end = sse_spans.back().second;
-		if ( last_sse_end < N ) {
-			add_element_to_tree(last_sse_end + 1, N);
-		}
-
-
-		// --- 5. REQUIRED FIX: Add Peptide Edges for the Anchor (SSE 1) ---
-		// The anchor segment must also be spanned by edges relative to its center.
-		ft.add_edge(anchor_center, anchor_end, core::kinematics::Edge::PEPTIDE);
-		ft.add_edge(anchor_center, anchor_start, core::kinematics::Edge::PEPTIDE);
 
 		return ft;
-	}
+	}	
+
+	
+
+
 		
 	
 	void test_fold_tree_from_dssp_string(){
@@ -291,23 +254,14 @@ public:
 		FoldTree ft = fold_tree_from_dssp_string(test_string_ft);
 		TS_ASSERT( ft.check_fold_tree() );
 
-		// TR << ft << endl;
+		TR << ft << endl;
+	
 		
+		TS_ASSERT_EQUALS(ft.size(),38);
+		TS_ASSERT_EQUALS(ft.num_jump(),12);
+		TS_ASSERT_EQUALS(ft.nres(),test_string_ft.length());
 
 
-		// int res = 18;
-
-		// core::Size const start_res = ft.get_residue_edge(res).start();
-		// core::Size const end_res = ft.get_residue_edge(res).stop();
-
-
-		
-		// TS_ASSERT_EQUALS(ft.size(),38);
-		// TS_ASSERT_EQUALS(ft.num_jump(),12);
-		// TS_ASSERT_EQUALS(ft.nres(),test_string_ft.length());
-
-		// TS_ASSERT_EQUALS(start_res,7);
-		// TS_ASSERT_EQUALS(end_res,18);
 
 	}
  

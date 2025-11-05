@@ -1343,7 +1343,7 @@ FoldTree::add_vertex( Size const v )
 	}
 	new_topology = true;
 }
-
+ 
 
 /////////////////////////////////////////////////////////////////////////////
 /// @details  Add a new jump to an existing fold tree, returns the jump_number of the new jump.
