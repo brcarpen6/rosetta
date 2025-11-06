@@ -1,0 +1,5 @@
+SEQUENCE: 
+SCORE: total_score       score         rms dslf_fa13    fa_atr    fa_dun   fa_elec fa_intra_rep       fa_rep       fa_sol hbond_bb_sc hbond_lr_bb    hbond_sc hbond_sr_bb      maxsub       omega     p_aa_pp pro_close      rama       ref      time yhh_planarity description 
+SCORE:    -176.746    -176.746       0.627     0.000  -392.360   111.354   -61.069        0.775       35.999      243.680      -1.165       0.000     -12.400     -52.996      74.000       5.817      -9.816     0.000   -10.730   -33.892     5.000         0.057 sfxn2_talaris14_5j0k_A_0001
+SCORE:    -176.171    -176.171       0.639     0.000  -397.385   109.698   -62.515        0.768       35.934      250.112      -0.839       0.000     -10.727     -52.527      74.000       6.158     -10.018     0.000   -11.006   -33.892     5.000         0.070 sfxn2_talaris14_5j0k_A_0002
+SCORE:    -179.724    -179.724       0.633     0.000  -399.040   114.887   -68.507        0.781       36.614      253.423      -1.174       0.000     -14.597     -53.216      74.000       5.642      -9.944     0.000   -10.769   -33.892     5.000         0.069 sfxn2_talaris14_5j0k_A_0003

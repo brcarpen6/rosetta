@@ -1,0 +1,1 @@
+awk 'FNR==1 && NR>1 {next} {if(NR==1) {print $0, "Directory"} else {split(FILENAME, a, "/"); print $0, a[1]}}' */score.sc | sort -nk2 | head -4 | tail -3 | awk '{print $1, $NF; system("grep -l " $1 " */*/*.silent")}'

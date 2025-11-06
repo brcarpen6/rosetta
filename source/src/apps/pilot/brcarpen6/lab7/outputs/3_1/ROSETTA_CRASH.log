@@ -1,0 +1,342 @@
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 0.0.dev0
+[COMMIT_DATE]: 2025-11-03T16:46:44
+[APPLICATION]: /Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/bin/relax.default.macosclangrelease
+[MODE]: Release
+[EXTRAS]: default
+[OS]: Apple Mac OS X
+[COMPILER]: Clang version "17.0.0 (clang-1700.0.13.5)"
+[STDLIB]: libc++ version 190102
+[START_OPTIONS]
+ -in:path:database=Desktop/RosettaBootcamp/rosetta/database/ -in:file:s=../inputs/5j0k_A.pdb -in:file:native=../inputs/5j0k_A.pdb -out:nstruct=3 -out:prefix=r_ -out:file:scorefile=score.sc -out:file:silent=relaxing_lab7.out -relax:fast -relax:constrain_relax_to_start_coords
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+0   libutility.dylib                    0x000000010db85770 backtrace_string(int) + 76
+1   libutility.dylib                    0x000000010dba41f8 utility::excn::Exception::Exception(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 220
+2   libutility.dylib                    0x000000010db89008 utility::UtilityExitException::UtilityExitException(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 112
+3   libutility.dylib                    0x000000010db88eac utility::exit(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, int) + 60
+4   libcore.3.dylib                     0x000000010ebbedc4 core::scoring::find_weights_file(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 1860
+5   libcore.3.dylib                     0x000000010ebbd664 core::scoring::ScoreFunction::add_weights_from_file(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 64
+6   libcore.3.dylib                     0x000000010ebd6038 core::scoring::ScoreFunctionFactory::load_score_function_from_disk(utility::options::OptionCollection const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, utility::vector1<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>>> const&) + 1020
+7   libcore.3.dylib                     0x000000010ebd65b8 std::__1::shared_ptr<core::scoring::ScoreFunction> utility::thread::safely_check_map_for_key_and_insert_if_absent<core::scoring::ScoreFunction, core::scoring::ScoreFunctionKey>(std::__1::function<std::__1::shared_ptr<core::scoring::ScoreFunction> ()>, bool, core::scoring::ScoreFunctionKey const&, std::__1::map<core::scoring::ScoreFunctionKey, std::__1::shared_ptr<core::scoring::ScoreFunction>, std::__1::less<core::scoring::ScoreFunctionKey>, std::__1::allocator<std::__1::pair<core::scoring::ScoreFunctionKey const, std::__1::shared_ptr<core::scoring::ScoreFunction>>>>&) + 152
+8   libcore.3.dylib                     0x000000010ebd48e8 core::scoring::ScoreFunctionFactory::create_score_function_nonstatic(utility::options::OptionCollection const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, utility::vector1<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>>> const&) + 528
+9   libcore.3.dylib                     0x000000010ebd81b8 core::scoring::get_score_function(utility::options::OptionCollection const&, bool) + 2216
+10  libprotocols.4.dylib                0x0000000109e007e4 protocols::relax::generate_relax_from_cmd(utility::options::OptionCollection const&, bool) + 52
+11  libprotocols.4.dylib                0x0000000109deef40 protocols::relax::Relax_main(bool) + 44
+12  relax.default.macosclangrelease     0x0000000104f3897c main + 612
+13  dyld                                0x000000018a1f6b98 start + 6076
+
+[END_BACKTRACE]
+
+[FILE]: src/core/scoring/ScoreFunction.cc
+[LINE]: 3516
+[START_MESSAGE]
+[ ERROR ] UtilityExitException
+ERROR: Unable to open weights/patch file. None of (./)ref2015 or (./)ref2015.wts or Desktop/RosettaBootcamp/rosetta/database/scoring/weights/ref2015 or Desktop/RosettaBootcamp/rosetta/database/scoring/weights/ref2015.wts exist
+
+
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 0.0.dev0
+[COMMIT_DATE]: 2025-11-03T16:46:44
+[APPLICATION]: /Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/bin/relax.default.macosclangrelease
+[MODE]: Release
+[EXTRAS]: default
+[OS]: Apple Mac OS X
+[COMPILER]: Clang version "17.0.0 (clang-1700.0.13.5)"
+[STDLIB]: libc++ version 190102
+[START_OPTIONS]
+ -in:path:database=Desktop/RosettaBootcamp/rosetta/ -in:file:s=../inputs/5j0k_A.pdb -in:file:native=../inputs/5j0k_A.pdb -out:nstruct=3 -out:prefix=r_ -out:file:scorefile=score.sc -out:file:silent=relaxing_lab7.out -relax:fast -relax:constrain_relax_to_start_coords
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+0   libutility.dylib                    0x000000010899d770 backtrace_string(int) + 76
+1   libutility.dylib                    0x00000001089bc1f8 utility::excn::Exception::Exception(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 220
+2   libutility.dylib                    0x00000001089a1008 utility::UtilityExitException::UtilityExitException(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 112
+3   libutility.dylib                    0x00000001089a0eac utility::exit(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, int) + 60
+4   libcore.3.dylib                     0x0000000109e9edc4 core::scoring::find_weights_file(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 1860
+5   libcore.3.dylib                     0x0000000109e9d664 core::scoring::ScoreFunction::add_weights_from_file(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 64
+6   libcore.3.dylib                     0x0000000109eb6038 core::scoring::ScoreFunctionFactory::load_score_function_from_disk(utility::options::OptionCollection const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, utility::vector1<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>>> const&) + 1020
+7   libcore.3.dylib                     0x0000000109eb65b8 std::__1::shared_ptr<core::scoring::ScoreFunction> utility::thread::safely_check_map_for_key_and_insert_if_absent<core::scoring::ScoreFunction, core::scoring::ScoreFunctionKey>(std::__1::function<std::__1::shared_ptr<core::scoring::ScoreFunction> ()>, bool, core::scoring::ScoreFunctionKey const&, std::__1::map<core::scoring::ScoreFunctionKey, std::__1::shared_ptr<core::scoring::ScoreFunction>, std::__1::less<core::scoring::ScoreFunctionKey>, std::__1::allocator<std::__1::pair<core::scoring::ScoreFunctionKey const, std::__1::shared_ptr<core::scoring::ScoreFunction>>>>&) + 152
+8   libcore.3.dylib                     0x0000000109eb48e8 core::scoring::ScoreFunctionFactory::create_score_function_nonstatic(utility::options::OptionCollection const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, utility::vector1<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>>> const&) + 528
+9   libcore.3.dylib                     0x0000000109eb81b8 core::scoring::get_score_function(utility::options::OptionCollection const&, bool) + 2216
+10  libprotocols.4.dylib                0x00000001050e07e4 protocols::relax::generate_relax_from_cmd(utility::options::OptionCollection const&, bool) + 52
+11  libprotocols.4.dylib                0x00000001050cef40 protocols::relax::Relax_main(bool) + 44
+12  relax.default.macosclangrelease     0x000000010013497c main + 612
+13  dyld                                0x000000018a1f6b98 start + 6076
+
+[END_BACKTRACE]
+
+[FILE]: src/core/scoring/ScoreFunction.cc
+[LINE]: 3516
+[START_MESSAGE]
+[ ERROR ] UtilityExitException
+ERROR: Unable to open weights/patch file. None of (./)ref2015 or (./)ref2015.wts or Desktop/RosettaBootcamp/rosetta/scoring/weights/ref2015 or Desktop/RosettaBootcamp/rosetta/scoring/weights/ref2015.wts exist
+
+
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 0.0.dev0
+[COMMIT_DATE]: 2025-11-03T16:46:44
+[APPLICATION]: /Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/bin/relax.default.macosclangrelease
+[MODE]: Release
+[EXTRAS]: default
+[OS]: Apple Mac OS X
+[COMPILER]: Clang version "17.0.0 (clang-1700.0.13.5)"
+[STDLIB]: libc++ version 190102
+[START_OPTIONS]
+ -in:path:database=Desktop/RosettaBootcamp/rosetta/database/ -in:file:s=/Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/src/apps/pilot/brcarpen6/lab7/inputs/5j0k_A.pdb -in:file:native=/Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/src/apps/pilot/brcarpen6/lab7/inputs/5j0k_A.pdb -out:nstruct=3 -out:prefix=r_ -out:file:scorefile=score.sc -out:file:silent=relaxing_lab7.out -relax:fast -relax:constrain_relax_to_start_coords
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+0   libutility.dylib                    0x000000010b3c9770 backtrace_string(int) + 76
+1   libutility.dylib                    0x000000010b3e81f8 utility::excn::Exception::Exception(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 220
+2   libutility.dylib                    0x000000010b3cd008 utility::UtilityExitException::UtilityExitException(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 112
+3   libutility.dylib                    0x000000010b3cceac utility::exit(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, int) + 60
+4   libcore.3.dylib                     0x000000010c9a2dc4 core::scoring::find_weights_file(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 1860
+5   libcore.3.dylib                     0x000000010c9a1664 core::scoring::ScoreFunction::add_weights_from_file(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 64
+6   libcore.3.dylib                     0x000000010c9ba038 core::scoring::ScoreFunctionFactory::load_score_function_from_disk(utility::options::OptionCollection const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, utility::vector1<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>>> const&) + 1020
+7   libcore.3.dylib                     0x000000010c9ba5b8 std::__1::shared_ptr<core::scoring::ScoreFunction> utility::thread::safely_check_map_for_key_and_insert_if_absent<core::scoring::ScoreFunction, core::scoring::ScoreFunctionKey>(std::__1::function<std::__1::shared_ptr<core::scoring::ScoreFunction> ()>, bool, core::scoring::ScoreFunctionKey const&, std::__1::map<core::scoring::ScoreFunctionKey, std::__1::shared_ptr<core::scoring::ScoreFunction>, std::__1::less<core::scoring::ScoreFunctionKey>, std::__1::allocator<std::__1::pair<core::scoring::ScoreFunctionKey const, std::__1::shared_ptr<core::scoring::ScoreFunction>>>>&) + 152
+8   libcore.3.dylib                     0x000000010c9b88e8 core::scoring::ScoreFunctionFactory::create_score_function_nonstatic(utility::options::OptionCollection const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, utility::vector1<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>>> const&) + 528
+9   libcore.3.dylib                     0x000000010c9bc1b8 core::scoring::get_score_function(utility::options::OptionCollection const&, bool) + 2216
+10  libprotocols.4.dylib                0x0000000107be47e4 protocols::relax::generate_relax_from_cmd(utility::options::OptionCollection const&, bool) + 52
+11  libprotocols.4.dylib                0x0000000107bd2f40 protocols::relax::Relax_main(bool) + 44
+12  relax.default.macosclangrelease     0x000000010293497c main + 612
+13  dyld                                0x000000018a1f6b98 start + 6076
+
+[END_BACKTRACE]
+
+[FILE]: src/core/scoring/ScoreFunction.cc
+[LINE]: 3516
+[START_MESSAGE]
+[ ERROR ] UtilityExitException
+ERROR: Unable to open weights/patch file. None of (./)ref2015 or (./)ref2015.wts or Desktop/RosettaBootcamp/rosetta/database/scoring/weights/ref2015 or Desktop/RosettaBootcamp/rosetta/database/scoring/weights/ref2015.wts exist
+
+
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 0.0.dev0
+[COMMIT_DATE]: 2025-11-03T16:46:44
+[APPLICATION]: /Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/bin/relax.default.macosclangrelease
+[MODE]: Release
+[EXTRAS]: default
+[OS]: Apple Mac OS X
+[COMPILER]: Clang version "17.0.0 (clang-1700.0.13.5)"
+[STDLIB]: libc++ version 190102
+[START_OPTIONS]
+ -in:path:database=~/Desktop/RosettaBootcamp/rosetta/database/ -in:file:s=/Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/src/apps/pilot/brcarpen6/lab7/inputs/5j0k_A.pdb -in:file:native=/Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/src/apps/pilot/brcarpen6/lab7/inputs/5j0k_A.pdb -out:nstruct=3 -out:prefix=r_ -out:file:scorefile=score.sc -out:file:silent=relaxing_lab7.out -relax:fast -relax:constrain_relax_to_start_coords
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+0   libutility.dylib                    0x000000010d7d9770 backtrace_string(int) + 76
+1   libutility.dylib                    0x000000010d7f81f8 utility::excn::Exception::Exception(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 220
+2   libutility.dylib                    0x000000010d7dd008 utility::UtilityExitException::UtilityExitException(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 112
+3   libutility.dylib                    0x000000010d7dceac utility::exit(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, int) + 60
+4   libcore.3.dylib                     0x000000010edb2dc4 core::scoring::find_weights_file(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 1860
+5   libcore.3.dylib                     0x000000010edb1664 core::scoring::ScoreFunction::add_weights_from_file(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 64
+6   libcore.3.dylib                     0x000000010edca038 core::scoring::ScoreFunctionFactory::load_score_function_from_disk(utility::options::OptionCollection const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, utility::vector1<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>>> const&) + 1020
+7   libcore.3.dylib                     0x000000010edca5b8 std::__1::shared_ptr<core::scoring::ScoreFunction> utility::thread::safely_check_map_for_key_and_insert_if_absent<core::scoring::ScoreFunction, core::scoring::ScoreFunctionKey>(std::__1::function<std::__1::shared_ptr<core::scoring::ScoreFunction> ()>, bool, core::scoring::ScoreFunctionKey const&, std::__1::map<core::scoring::ScoreFunctionKey, std::__1::shared_ptr<core::scoring::ScoreFunction>, std::__1::less<core::scoring::ScoreFunctionKey>, std::__1::allocator<std::__1::pair<core::scoring::ScoreFunctionKey const, std::__1::shared_ptr<core::scoring::ScoreFunction>>>>&) + 152
+8   libcore.3.dylib                     0x000000010edc88e8 core::scoring::ScoreFunctionFactory::create_score_function_nonstatic(utility::options::OptionCollection const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, utility::vector1<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>>> const&) + 528
+9   libcore.3.dylib                     0x000000010edcc1b8 core::scoring::get_score_function(utility::options::OptionCollection const&, bool) + 2216
+10  libprotocols.4.dylib                0x0000000109ff47e4 protocols::relax::generate_relax_from_cmd(utility::options::OptionCollection const&, bool) + 52
+11  libprotocols.4.dylib                0x0000000109fe2f40 protocols::relax::Relax_main(bool) + 44
+12  relax.default.macosclangrelease     0x0000000104e6497c main + 612
+13  dyld                                0x000000018a1f6b98 start + 6076
+
+[END_BACKTRACE]
+
+[FILE]: src/core/scoring/ScoreFunction.cc
+[LINE]: 3516
+[START_MESSAGE]
+[ ERROR ] UtilityExitException
+ERROR: Unable to open weights/patch file. None of (./)ref2015 or (./)ref2015.wts or ~/Desktop/RosettaBootcamp/rosetta/database/scoring/weights/ref2015 or ~/Desktop/RosettaBootcamp/rosetta/database/scoring/weights/ref2015.wts exist
+
+
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 0.0.dev0
+[COMMIT_DATE]: 2025-11-03T16:46:44
+[APPLICATION]: /Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/bin/relax.default.macosclangrelease
+[MODE]: Release
+[EXTRAS]: default
+[OS]: Apple Mac OS X
+[COMPILER]: Clang version "17.0.0 (clang-1700.0.13.5)"
+[STDLIB]: libc++ version 190102
+[START_OPTIONS]
+ -in:path:database=~/Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/database/ -in:file:s=/Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/src/apps/pilot/brcarpen6/lab7/inputs/5j0k_A.pdb -in:file:native=/Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/src/apps/pilot/brcarpen6/lab7/inputs/5j0k_A.pdb -out:nstruct=3 -out:prefix=r_ -out:file:scorefile=score.sc -out:file:silent=relaxing_lab7.out -relax:fast -relax:constrain_relax_to_start_coords
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+0   libutility.dylib                    0x000000010ab0d770 backtrace_string(int) + 76
+1   libutility.dylib                    0x000000010ab2c1f8 utility::excn::Exception::Exception(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 220
+2   libutility.dylib                    0x000000010ab11008 utility::UtilityExitException::UtilityExitException(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 112
+3   libutility.dylib                    0x000000010ab10eac utility::exit(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, int) + 60
+4   libcore.3.dylib                     0x000000010c0e6dc4 core::scoring::find_weights_file(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 1860
+5   libcore.3.dylib                     0x000000010c0e5664 core::scoring::ScoreFunction::add_weights_from_file(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 64
+6   libcore.3.dylib                     0x000000010c0fe038 core::scoring::ScoreFunctionFactory::load_score_function_from_disk(utility::options::OptionCollection const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, utility::vector1<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>>> const&) + 1020
+7   libcore.3.dylib                     0x000000010c0fe5b8 std::__1::shared_ptr<core::scoring::ScoreFunction> utility::thread::safely_check_map_for_key_and_insert_if_absent<core::scoring::ScoreFunction, core::scoring::ScoreFunctionKey>(std::__1::function<std::__1::shared_ptr<core::scoring::ScoreFunction> ()>, bool, core::scoring::ScoreFunctionKey const&, std::__1::map<core::scoring::ScoreFunctionKey, std::__1::shared_ptr<core::scoring::ScoreFunction>, std::__1::less<core::scoring::ScoreFunctionKey>, std::__1::allocator<std::__1::pair<core::scoring::ScoreFunctionKey const, std::__1::shared_ptr<core::scoring::ScoreFunction>>>>&) + 152
+8   libcore.3.dylib                     0x000000010c0fc8e8 core::scoring::ScoreFunctionFactory::create_score_function_nonstatic(utility::options::OptionCollection const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, utility::vector1<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>>> const&) + 528
+9   libcore.3.dylib                     0x000000010c1001b8 core::scoring::get_score_function(utility::options::OptionCollection const&, bool) + 2216
+10  libprotocols.4.dylib                0x00000001073287e4 protocols::relax::generate_relax_from_cmd(utility::options::OptionCollection const&, bool) + 52
+11  libprotocols.4.dylib                0x0000000107316f40 protocols::relax::Relax_main(bool) + 44
+12  relax.default.macosclangrelease     0x000000010206097c main + 612
+13  dyld                                0x000000018a1f6b98 start + 6076
+
+[END_BACKTRACE]
+
+[FILE]: src/core/scoring/ScoreFunction.cc
+[LINE]: 3516
+[START_MESSAGE]
+[ ERROR ] UtilityExitException
+ERROR: Unable to open weights/patch file. None of (./)ref2015 or (./)ref2015.wts or ~/Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/database/scoring/weights/ref2015 or ~/Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/database/scoring/weights/ref2015.wts exist
+
+
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 0.0.dev0
+[COMMIT_DATE]: 2025-11-03T16:46:44
+[APPLICATION]: /Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/bin/relax.default.macosclangrelease
+[MODE]: Release
+[EXTRAS]: default
+[OS]: Apple Mac OS X
+[COMPILER]: Clang version "17.0.0 (clang-1700.0.13.5)"
+[STDLIB]: libc++ version 190102
+[START_OPTIONS]
+ -in:path:database=/Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/database/ -in:file:s=/Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/src/apps/pilot/brcarpen6/lab7/inputs/5j0k_A.pdb -in:file:native=/Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/src/apps/pilot/brcarpen6/lab7/inputs/5j0k_A.pdb -out:nstruct=3 -out:prefix=sfxn2_talaris14_ -out:file:scorefile=score_talaris14.sc -out:file:silent=relaxing_lab7_talaris14.out -score:weights=talaris14 -relax:fast -relax:constrain_relax_to_start_coords
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+0   libutility.dylib                    0x000000010ae4d770 backtrace_string(int) + 76
+1   libutility.dylib                    0x000000010ae6c1f8 utility::excn::Exception::Exception(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 220
+2   libutility.dylib                    0x000000010ae51008 utility::UtilityExitException::UtilityExitException(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 112
+3   libutility.dylib                    0x000000010ae50eac utility::exit(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, int) + 60
+4   libcore.3.dylib                     0x000000010be86dc4 core::scoring::find_weights_file(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 1860
+5   libcore.3.dylib                     0x000000010be85664 core::scoring::ScoreFunction::add_weights_from_file(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 64
+6   libcore.3.dylib                     0x000000010be9e038 core::scoring::ScoreFunctionFactory::load_score_function_from_disk(utility::options::OptionCollection const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, utility::vector1<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>>> const&) + 1020
+7   libcore.3.dylib                     0x000000010be9e5b8 std::__1::shared_ptr<core::scoring::ScoreFunction> utility::thread::safely_check_map_for_key_and_insert_if_absent<core::scoring::ScoreFunction, core::scoring::ScoreFunctionKey>(std::__1::function<std::__1::shared_ptr<core::scoring::ScoreFunction> ()>, bool, core::scoring::ScoreFunctionKey const&, std::__1::map<core::scoring::ScoreFunctionKey, std::__1::shared_ptr<core::scoring::ScoreFunction>, std::__1::less<core::scoring::ScoreFunctionKey>, std::__1::allocator<std::__1::pair<core::scoring::ScoreFunctionKey const, std::__1::shared_ptr<core::scoring::ScoreFunction>>>>&) + 152
+8   libcore.3.dylib                     0x000000010be9c8e8 core::scoring::ScoreFunctionFactory::create_score_function_nonstatic(utility::options::OptionCollection const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, utility::vector1<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>>> const&) + 528
+9   libcore.3.dylib                     0x000000010bea01b8 core::scoring::get_score_function(utility::options::OptionCollection const&, bool) + 2216
+10  libprotocols.4.dylib                0x00000001070c87e4 protocols::relax::generate_relax_from_cmd(utility::options::OptionCollection const&, bool) + 52
+11  libprotocols.4.dylib                0x00000001070b6f40 protocols::relax::Relax_main(bool) + 44
+12  relax.default.macosclangrelease     0x00000001021ac97c main + 612
+13  dyld                                0x000000018a1f6b98 start + 6076
+
+[END_BACKTRACE]
+
+[FILE]: src/core/scoring/ScoreFunction.cc
+[LINE]: 3516
+[START_MESSAGE]
+[ ERROR ] UtilityExitException
+ERROR: Unable to open weights/patch file. None of (./)talaris14 or (./)talaris14.wts or /Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/database/scoring/weights/talaris14 or /Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/database/scoring/weights/talaris14.wts exist
+
+
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
+##############################################################################################################
+#
+# Rosetta crash log. Please submit the contents of this file to http://crash.rosettacommons.org/
+# or use the script Rosetta/main/source/scripts/python/public/report_crashes.py
+#
+
+[START_CRASH_REPORT]
+[ROSETTA_VERSION]: 0.0.dev0
+[COMMIT_DATE]: 2025-11-03T16:46:44
+[APPLICATION]: /Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/bin/relax.default.macosclangrelease
+[MODE]: Release
+[EXTRAS]: default
+[OS]: Apple Mac OS X
+[COMPILER]: Clang version "17.0.0 (clang-1700.0.13.5)"
+[STDLIB]: libc++ version 190102
+[START_OPTIONS]
+ -in:path:database=/Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/database/ -in:file:s=/Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/src/apps/pilot/brcarpen6/lab7/inputs/5j0k_A.pdb -in:file:native=/Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/src/apps/pilot/brcarpen6/lab7/inputs/5j0k_A.pdb -out:nstruct=3 -out:prefix=sfxn2_talaris14_ -out:file:scorefile=score_talaris14.sc -out:file:silent=relaxing_lab7_talaris14.out -score:weights=talaris2014 -relax:fast -relax:constrain_relax_to_start_coords
+
+[END_OPTIONS]
+
+[START_BACKTRACE]: RAW_LIBC
+0   libutility.dylib                    0x000000010cc01770 backtrace_string(int) + 76
+1   libutility.dylib                    0x000000010cc201f8 utility::excn::Exception::Exception(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 220
+2   libutility.dylib                    0x000000010cc05008 utility::UtilityExitException::UtilityExitException(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&) + 112
+3   libutility.dylib                    0x000000010cc04eac utility::exit(char const*, int, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, int) + 60
+4   libcore.3.dylib                     0x000000010e1f1164 core::scoring::ScoreFunctionFactory::validate_talaris(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, utility::options::OptionCollection const&) + 1504
+5   libcore.3.dylib                     0x000000010e1f1fe4 core::scoring::ScoreFunctionFactory::load_score_function_from_disk(utility::options::OptionCollection const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, utility::vector1<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>>> const&) + 936
+6   libcore.3.dylib                     0x000000010e1f25b8 std::__1::shared_ptr<core::scoring::ScoreFunction> utility::thread::safely_check_map_for_key_and_insert_if_absent<core::scoring::ScoreFunction, core::scoring::ScoreFunctionKey>(std::__1::function<std::__1::shared_ptr<core::scoring::ScoreFunction> ()>, bool, core::scoring::ScoreFunctionKey const&, std::__1::map<core::scoring::ScoreFunctionKey, std::__1::shared_ptr<core::scoring::ScoreFunction>, std::__1::less<core::scoring::ScoreFunctionKey>, std::__1::allocator<std::__1::pair<core::scoring::ScoreFunctionKey const, std::__1::shared_ptr<core::scoring::ScoreFunction>>>>&) + 152
+7   libcore.3.dylib                     0x000000010e1f08e8 core::scoring::ScoreFunctionFactory::create_score_function_nonstatic(utility::options::OptionCollection const&, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>> const&, utility::vector1<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char>>>> const&) + 528
+8   libcore.3.dylib                     0x000000010e1f41b8 core::scoring::get_score_function(utility::options::OptionCollection const&, bool) + 2216
+9   libprotocols.4.dylib                0x000000010941c7e4 protocols::relax::generate_relax_from_cmd(utility::options::OptionCollection const&, bool) + 52
+10  libprotocols.4.dylib                0x000000010940af40 protocols::relax::Relax_main(bool) + 44
+11  relax.default.macosclangrelease     0x000000010421097c main + 612
+12  dyld                                0x000000018a1f6b98 start + 6076
+
+[END_BACKTRACE]
+
+[FILE]: src/core/scoring/ScoreFunctionFactory.cc
+[LINE]: 109
+[START_MESSAGE]
+[ ERROR ] UtilityExitException
+ERROR: talaris2014(.wts) requested, but -corrections::restore_talaris_behavior not set to true. This leads to a garbage scorefunction.  Exiting.
+
+
+
+[END_MESSAGE]
+[END_CRASH_REPORT]
+
