@@ -87,11 +87,11 @@ public:
 	clone() const override;
 
 	std::string
-	get_name() const override;
+	get_name() const override ;
 
 	static
 	std::string 
-	mover_name();
+	mover_name() ;
 
 	static
 	void

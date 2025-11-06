@@ -82,13 +82,4 @@ int main(int argc, char ** argv) {
    bootcamp_mover->apply( *mypose );
    protocols::jd2::JobDistributor::get_instance()->go(bootcamp_mover);
 
-     
-
-
-
-
-        
-
-    
-
 }

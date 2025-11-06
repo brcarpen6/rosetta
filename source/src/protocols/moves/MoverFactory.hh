@@ -30,7 +30,7 @@
 #include <map>
 #include <set>
 
-namespace protocols {
+namespace protocols { 
 namespace moves {
 
 /// @brief This templated class will register an instance of an
