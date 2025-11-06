@@ -75,78 +75,79 @@ FoldTree fold_tree_from_ss(Pose const & pose){
 		return fold_tree_from_dssp_string( ss );
 	} 
 
-	FoldTree fold_tree_from_dssp_string(string const & ss){
+FoldTree fold_tree_from_dssp_string(string const & ss){
 
-		FoldTree ft;
-		core::Size const N = ss.size();
+    FoldTree ft;
+    core::Size const N = ss.size();
 
-		// TR << N << endl;
+    // TR << N << endl;
 
-		// ft.simple_tree( N );
-		
-		utility::vector1< pair< core::Size, core::Size > > spans = identify_secondary_structure_spans(ss);
-		
-		// // First span and its midpoint (our root res)
-		core::Size const sse1_start = spans[1].first;
-		core::Size const sse1_end = spans[1].second;
-		core::Size const rootpoint = (sse1_start + sse1_end)/2;
-
-
-		ft.add_edge(rootpoint, 1, Edge::PEPTIDE);
-		ft.add_edge(rootpoint, sse1_end , Edge::PEPTIDE);
-		
-		int num_jump=1;
-		for ( core::Size i = 2; i <= spans.size(); ++i ) {
-
-			
+    // ft.simple_tree( N );
+    
+    utility::vector1< pair< core::Size, core::Size > > spans = identify_secondary_structure_spans(ss);
+    
+    // // First span and its midpoint (our root res)
+    core::Size const sse1_start = spans[1].first;
+    core::Size const sse1_end = spans[1].second;
+    core::Size const rootpoint = (sse1_start + sse1_end)/2;
 
 
-			// Define all points
-			// each consecutive sse with cutpoint and jump edge to midpoint of sse and gaps
-			core::Size const sse_i_start = spans[i].first;
-			core::Size const sse_i_end = spans[i].second;
-			core::Size const midpoint_i_sse = (sse_i_start + sse_i_end)/2;
+    ft.add_edge(rootpoint, 1, Edge::PEPTIDE);
+    ft.add_edge(rootpoint, sse1_end , Edge::PEPTIDE);
+    
+    int num_jump=1;
+    for ( core::Size i = 2; i <= spans.size(); ++i ) {
 
-			//loops
-			// between sse
-			core::Size const gap_start = spans[i-1].second;
-
-			core::Size const gap_end = spans[i].first;
-			core::Size const midpoint_gap = (gap_start + gap_end)/2;
-			
-
-			core::Size const loop_start = gap_start + 1;
-			core::Size const loop_end = gap_end - 1;
+        
 
 
-			ft.add_edge(rootpoint, midpoint_gap , num_jump++);
+        // Define all points
+        // each consecutive sse with cutpoint and jump edge to midpoint of sse and gaps
+        core::Size const sse_i_start = spans[i].first;
+        core::Size const sse_i_end = spans[i].second;
+        core::Size const midpoint_i_sse = (sse_i_start + sse_i_end)/2;
 
-			ft.add_edge(midpoint_gap, loop_start, Edge::PEPTIDE);
+        //loops
+        // between sse
+        core::Size const gap_start = spans[i-1].second;
 
-		
-			ft.add_edge(midpoint_gap, loop_end, Edge::PEPTIDE);
+        core::Size const gap_end = spans[i].first;
+        core::Size const midpoint_gap = (gap_start + gap_end)/2;
+        
 
-			ft.add_edge(rootpoint, midpoint_i_sse, num_jump++);
+        core::Size const loop_start = gap_start + 1;
+        core::Size const loop_end = gap_end - 1;
 
-			ft.add_edge(midpoint_i_sse, sse_i_start, Edge::PEPTIDE);
 
-			if(i == spans.size()){
-				ft.add_edge(midpoint_i_sse, N, Edge::PEPTIDE);
-				
-			}else{
-				ft.add_edge(midpoint_i_sse, sse_i_end, Edge::PEPTIDE);
-				
-			}
+        ft.add_edge(rootpoint, midpoint_gap , num_jump++);
 
-			
+        ft.add_edge(midpoint_gap, loop_start, Edge::PEPTIDE);
 
-			// TR << "end loop" << i << endl;
-			// TR << "current ft " << ft << endl;
-			
-		}
+    
+        ft.add_edge(midpoint_gap, loop_end, Edge::PEPTIDE);
 
-		return ft;
-	}	
+        ft.add_edge(rootpoint, midpoint_i_sse, num_jump++);
+
+        ft.add_edge(midpoint_i_sse, sse_i_start, Edge::PEPTIDE);
+
+        if(i == spans.size()){
+            ft.add_edge(midpoint_i_sse, N, Edge::PEPTIDE);
+            
+        }else{
+            ft.add_edge(midpoint_i_sse, sse_i_end, Edge::PEPTIDE);
+            
+        }
+
+        
+
+        // TR << "end loop" << i << endl;
+        // TR << "current ft " << ft << endl;
+        
+    }
+
+    return ft;
+}
+	
 }
 
 }

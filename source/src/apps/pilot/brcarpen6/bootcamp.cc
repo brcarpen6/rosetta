@@ -43,6 +43,8 @@
 #include <core/kinematics/MoveMap.hh>
 #include <core/optimization/AtomTreeMinimizer.hh>
 #include <core/optimization/MinimizerOptions.hh>
+#include <core/pose/variant_util.hh>
+#include <protocols/bootcamp/fold_tree_from_ss.hh>
 
 
 using namespace std;
@@ -54,6 +56,8 @@ using namespace protocols::moves;
 using namespace core::pack::task;
 
 static basic::Tracer TR( "bootcamp" );
+
+
 
 int main(int argc, char ** argv) {
     cout << "Hello world!!" << endl;
@@ -71,8 +75,12 @@ int main(int argc, char ** argv) {
     }
 
     PoseOP mypose = pose_from_file(filenames[1]);
+    mypose->fold_tree(protocols::bootcamp::fold_tree_from_ss(*mypose));
+
 
     ScoreFunctionOP sfxn = get_score_function();
+    sfxn->set_weight( linear_chainbreak, 1);
+    correctly_add_cutpoint_variants(*mypose);
 
     core::kinematics::MoveMap mm;
     mm.set_bb(true);
@@ -81,6 +89,8 @@ int main(int argc, char ** argv) {
     core::optimization::MinimizerOptions min_opts( "lbfgs_armijo_atol", 0.01, true );
     core::optimization::AtomTreeMinimizer atm;
 
+    //set weight in score function before here linear_chainbreak term
+ 
     MonteCarlo mc(*mypose, *sfxn, 1.0);
 
     PyMOLObserverOP the_observer = AddPyMOLObserver( *mypose, true, 0);
