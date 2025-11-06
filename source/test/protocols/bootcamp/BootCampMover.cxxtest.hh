@@ -38,6 +38,7 @@
 #include <protocols/moves/mover_schemas.hh>
 #include <protocols/bootcamp/BootCampMover.hh>
 #include <protocols/bootcamp/BootCampMoverCreator.hh>
+#include <core/scoring/ScoreFunctionFactory.hh>
 // C++ headers
 
 //Auto Headers
@@ -88,6 +89,48 @@ public:
 		TS_ASSERT( bcm_op );               
 		TS_ASSERT_DIFFERS( bcm_op, nullptr );
   	}
+
+	void test_setters_getters() {
+        
+
+        // 1. Setup the Mover (starts with default 100 iterations)
+        BootCampMover mover;
+        
+        // --- Test Iterations Setter/Getter ---
+        const core::Size new_iterations = 10;
+        
+        // Set the new value
+        mover.set_num_iterations(new_iterations);
+        
+        // Retrieve and check using TS_ASSERT_EQUALS
+        core::Size retrieved_iterations = mover.get_num_iterations();
+        TS_ASSERT_EQUALS(new_iterations, retrieved_iterations);
+        
+
+
+        // --- Test ScoreFunction Setter/Getter ---
+        
+        // Create the test ScoreFunction object
+        ScoreFunctionOP test_sfxn = ScoreFunctionFactory::create_score_function( "score13" );
+
+        // Set the new ScoreFunction
+        mover.set_sfxn(test_sfxn);
+        
+        // Retrieve the ScoreFunction
+        ScoreFunctionOP retrieved_sfxn = mover.get_sfxn();
+
+        // Check if the retrieved pointer is valid using TS_ASSERT
+        // This is equivalent to checking if (!retrieved_sfxn)
+        TS_ASSERT(retrieved_sfxn);
+        
+        // Check if the retrieved object is the correct one by comparing its unique name
+        // TS_ASSERT_EQUALS(test_sfxn.get_name(), retrieved_sfxn.get_name());
+        
+
+        // Optional: Show the apply method uses the new values
+        
+        // mover.apply();
+    }
 
 
 		

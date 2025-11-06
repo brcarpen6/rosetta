@@ -68,10 +68,18 @@ namespace bootcamp {
 	/////////////////////
 
 /// @brief Default constructor
-BootCampMover::BootCampMover():
-	protocols::moves::Mover( BootCampMover::mover_name() )
+BootCampMover::BootCampMover(
+	core::Size default_iterations,
+	core::scoring::ScoreFunctionOP sfxn
+)
+: protocols::moves::Mover( BootCampMover::mover_name() ),
+  sfxn_( sfxn ),
+  num_iterations_( default_iterations )
 {
-
+	// If no scorefunction was provided, use Rosetta default
+	if ( !sfxn_ ) {
+		sfxn_ = core::scoring::get_score_function();
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -89,7 +97,7 @@ BootCampMover::apply( core::pose::Pose & pose ){
 	pose.fold_tree(protocols::bootcamp::fold_tree_from_ss(pose));
 
 
-    ScoreFunctionOP sfxn = get_score_function();
+    ScoreFunctionOP sfxn = sfxn_;
     sfxn->set_weight( linear_chainbreak, 1);
     correctly_add_cutpoint_variants(pose);
 
@@ -110,7 +118,7 @@ BootCampMover::apply( core::pose::Pose & pose ){
     Pose copy_pose = pose;
 
     vector<int> energies;
-    for(int i = 1; i <= 100; ++i){
+    for(core::Size i = 1; i <= num_iterations_; ++i){
         
 
         double uniform_random_number = uniform();

@@ -23,6 +23,8 @@
 
 // Core headers
 #include <core/pose/Pose.fwd.hh>
+#include <core/scoring/ScoreFunction.hh>
+#include <core/scoring/ScoreFunctionFactory.hh>
 
 // Basic/Utility headers
 #include <basic/datacache/DataMap.fwd.hh>
@@ -30,11 +32,17 @@
 
 #include <basic/citation_manager/UnpublishedModuleInfo.fwd.hh>
 
+using namespace core::scoring;
+
 namespace protocols{
 namespace bootcamp {
 
 ///@brief 2025_bootcamp_mover_subclass
 class BootCampMover : public protocols::moves::Mover {
+
+private: 
+	ScoreFunctionOP sfxn_;
+	core::Size num_iterations_;// data
 
 public:
 
@@ -43,10 +51,34 @@ public:
 	/////////////////////
 
 	/// @brief Default constructor
-	BootCampMover();
+	BootCampMover(
+        core::Size default_iterations = 100,
+        core::scoring::ScoreFunctionOP sfxn = get_score_function()
+    );
 
 	/// @brief Destructor (important for properly forward-declaring smart-pointer members)
 	~BootCampMover() override;
+public:
+
+/// @brief Setter for the desired number of iterations.
+    void set_num_iterations(core::Size num_iterations) {
+        num_iterations_ = num_iterations;
+    }
+
+    /// @brief Getter for the desired number of iterations.
+    core::Size get_num_iterations() const {
+        return num_iterations_;
+    }
+
+    /// @brief Setter for the ScoreFunction object.
+    void set_sfxn(ScoreFunctionOP sfxn) {
+        sfxn_ = sfxn;
+    }
+
+    /// @brief Getter for the ScoreFunction object.
+    ScoreFunctionOP get_sfxn() const {
+        return sfxn_;
+    }
 
 
 public:
@@ -104,7 +136,7 @@ public: //Function overrides needed for the citation manager:
 
 private: // methods
 
-private: // data
+
 
 };
 
