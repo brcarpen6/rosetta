@@ -45,6 +45,7 @@
 #include <core/optimization/MinimizerOptions.hh>
 #include <core/pose/variant_util.hh>
 #include <protocols/bootcamp/fold_tree_from_ss.hh>
+#include <protocols/jd2/JobDistributor.hh> 
 
 
 using namespace std;

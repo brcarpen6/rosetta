@@ -46,6 +46,7 @@
 #include <core/pose/variant_util.hh>
 #include <protocols/bootcamp/fold_tree_from_ss.hh>
 
+
 // Citation Manager
 #include <utility/vector1.hh>
 #include <basic/citation_manager/UnpublishedModuleInfo.hh>
