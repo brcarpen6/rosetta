@@ -1,0 +1,16 @@
+
+-database /Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/database
+-in:file:s /Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/src/apps/pilot/brcarpen6/lab7/inputs/5j0k_A.pdb
+-in:file:native /Users/britniecarpentier/Desktop/RosettaBootcamp/rosetta/source/src/apps/pilot/brcarpen6/lab7/inputs/5j0k_A.pdb
+-score:weights talaris2014
+-corrections::restore_talaris_behavior
+-nstruct 3
+-relax:constrain_relax_to_start_coords
+-relax:fast
+-out:prefix sfxn2_talaris14_
+-out:file:silent relaxing_lab7_talaris14.out
+-out:file:scorefile score_talaris14.sc
+
+
+
+

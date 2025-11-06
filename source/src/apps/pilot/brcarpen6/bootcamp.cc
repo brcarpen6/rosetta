@@ -46,6 +46,7 @@
 #include <core/pose/variant_util.hh>
 #include <protocols/bootcamp/fold_tree_from_ss.hh>
 #include <protocols/jd2/JobDistributor.hh> 
+#include <protocols/bootcamp/BootCampMover.hh>
 
 
 using namespace std;
@@ -76,78 +77,12 @@ int main(int argc, char ** argv) {
     }
 
     PoseOP mypose = pose_from_file(filenames[1]);
-    mypose->fold_tree(protocols::bootcamp::fold_tree_from_ss(*mypose));
 
+   protocols::bootcamp::BootCampMoverOP bootcamp_mover( new protocols::bootcamp::BootCampMover() );
+   bootcamp_mover->apply( *mypose );
+   protocols::jd2::JobDistributor::get_instance()->go(bootcamp_mover);
 
-    ScoreFunctionOP sfxn = get_score_function();
-    sfxn->set_weight( linear_chainbreak, 1);
-    correctly_add_cutpoint_variants(*mypose);
-
-    core::kinematics::MoveMap mm;
-    mm.set_bb(true);
-    mm.set_chi(true);
-
-    core::optimization::MinimizerOptions min_opts( "lbfgs_armijo_atol", 0.01, true );
-    core::optimization::AtomTreeMinimizer atm;
-
-    //set weight in score function before here linear_chainbreak term
- 
-    MonteCarlo mc(*mypose, *sfxn, 1.0);
-
-    PyMOLObserverOP the_observer = AddPyMOLObserver( *mypose, true, 0);
-    the_observer -> pymol().apply(*mypose);
-
-    Pose copy_pose = *mypose;
-    int accepted_count = 0;
-    int rejected_count = 0;
-    vector<int> energies;
-    for(int i = 1; i <= 10; ++i){
-        
-
-        double uniform_random_number = uniform();
-        core::Size N = mypose->size();
-        core::Size randres = static_cast<core::Size> (uniform_random_number * N + 1);
-        core::Real pert1 = gaussian();
-        core::Real pert2 = gaussian();
-        core::Real orig_phi = mypose->phi( randres );
-        core::Real orig_psi = mypose->psi( randres );
-
-        mypose->set_phi( randres, orig_phi + pert1);
-        mypose->set_psi( randres, orig_psi + pert1);
-
-        PackerTaskOP repack_task = TaskFactory::create_packer_task(*mypose);
-        repack_task-> restrict_to_repacking();
-        core::pack::pack_rotamers(*mypose, *sfxn, repack_task);
-
-        copy_pose = *mypose;
-        atm.run( copy_pose, mm, *sfxn, min_opts );
-        *mypose = copy_pose;
-
-        core::Real score = sfxn -> score ( *mypose );
-
-        energies.push_back(score) ;
-
-
-        bool accept = mc.boltzmann(*mypose);
-
-        if(accept){
-            accepted_count++;
-        } else{
-            rejected_count++;
-        }
-
-        TR << "Cycle: " << i << " score: " << score << " best: " << mc.lowest_score() << endl;
-    }
-    
-    double average = static_cast<double>(std::accumulate(energies.begin(), energies.end(), 0)) / energies.size();
-    double accepted_rate = accepted_count / 10.0; 
-    double rejected_rate = rejected_count / 10.0; 
-
-    TR << "Accepted Rate: " << accepted_rate << endl;
-    TR << "Recjected Rate: " << rejected_rate << endl;
-    TR << "Average Energy: " << average << endl;
-
-    
+     
 
 
 

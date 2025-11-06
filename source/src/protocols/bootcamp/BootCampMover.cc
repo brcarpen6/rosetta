@@ -110,7 +110,7 @@ BootCampMover::apply( core::pose::Pose & pose ){
     Pose copy_pose = pose;
 
     vector<int> energies;
-    for(int i = 1; i <= 10; ++i){
+    for(int i = 1; i <= 100; ++i){
         
 
         double uniform_random_number = uniform();
