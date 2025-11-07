@@ -17,9 +17,12 @@
 // Unit headers
 #include <protocols/bootcamp/BootCampMover.fwd.hh>
 #include <protocols/moves/Mover.hh>
-
+// #include <core/kinematics/MoveMap.fwd.hh>
+// #include <core/kinematics/MoveMap.hh>
+#include <protocols/moves/MoveMapMover.hh>
 // Protocol headers
 #include <protocols/filters/Filter.fwd.hh>
+#include <utility/tag/Tag.hh>
 
 // Core headers
 #include <core/pose/Pose.fwd.hh>
@@ -33,6 +36,7 @@
 #include <basic/citation_manager/UnpublishedModuleInfo.fwd.hh>
 
 using namespace core::scoring;
+using namespace core::kinematics;
 
 namespace protocols{
 namespace bootcamp {
@@ -80,6 +84,18 @@ public:
         return sfxn_;
     }
 
+	/// @brief parse XML (specifically in the context of the parser/scripting scheme)
+	void parse_my_tag( 
+		TagCOP tag, 
+		basic::datacache::DataMap & data 
+		) override;
+
+	/// @brief parse "scorefxn" XML option (can be employed virtually by derived Packing movers)
+	virtual void parse_score_function(
+		TagCOP,
+		basic::datacache::DataMap const &
+	);
+
 
 public:
 
@@ -103,11 +119,7 @@ public:
 	///////////////////////////////
 
 	/// @brief parse XML tag (to use this Mover in Rosetta Scripts)
-	void
-	parse_my_tag(
-		utility::tag::TagCOP tag,
-		basic::datacache::DataMap & data ) override;
-
+	
 	//BootCampMover & operator=( BootCampMover const & src );
 
 	/// @brief required in the context of the parser/scripting scheme
@@ -134,7 +146,7 @@ public: //Function overrides needed for the citation manager:
 	/// @brief This mover is unpublished.  It returns brcarpen6 as its author.
 	void provide_citation_info(basic::citation_manager::CitationCollectionList & citations) const override;
 
-private: // methods
+private:
 
 
 

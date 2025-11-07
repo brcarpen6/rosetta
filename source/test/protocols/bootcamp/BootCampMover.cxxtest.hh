@@ -15,6 +15,7 @@
 // Test headers
 #include <cxxtest/TestSuite.h>
 #include <unordered_set>
+#include <sstream>
 
 #include <protocols/match/upstream/ProteinSCSampler.hh>
 #include <protocols/match/upstream/OriginalScaffoldBuildPoint.hh>
@@ -23,6 +24,9 @@
 #include <test/core/init_util.hh>
 #include <test/protocols/init_util.hh>
 #include <core/scoring/dssp/Dssp.hh>
+#include <utility/tag/Tag.hh>
+#include <basic/datacache/DataMap.hh>
+#include <utility/tag/XMLSchemaGeneration.hh>
 
 // Utility headers
 #include <basic/Tracer.hh>
@@ -53,6 +57,7 @@ using namespace core::scoring;
 using namespace core::pose;
 using namespace protocols::moves;
 using namespace protocols::bootcamp;
+using namespace utility::tag;
 
 // --------------- Test Class --------------- //
 
@@ -74,6 +79,8 @@ public:
 		protocols_init();
 	}
 
+
+public:
 	
 
 	void test_factory_builds_bootcamp_mover() {
@@ -132,7 +139,35 @@ public:
         // mover.apply();
     }
 
+	
+
+    // --- Unit Test 2: Reading the score function ---
+
+    void test_parse_my_tag_reads_score_function_numit() {
+        // 1. Arrange: Create the DataMap with the expected value
+        basic::datacache::DataMap data;
+		// TagCOP tag = tagptr_from_string("<MyTest name=test sfxn="score13">\n"
+		// "</MyTest>")
+        ScoreFunctionOP sfxn = ScoreFunctionOP(new ScoreFunction );
+        data.add("scorefxns", "score13", sfxn);
+
+		std::string xml_file = "<BootCampMover scorefxn=\"score13\" num_iterations=15/>";
+		std::stringstream xml_ss( xml_file );
+
+        // Create the BootCampMover instance
+        BootCampMover mover;
+		utility::tag::TagCOP tag = utility::tag::Tag::create( xml_ss );
+
+        // 2. Act: Invoke the function under test
+        mover.parse_my_tag(tag,data);
+
+        // 3. Assert: Check the internal data member
+        TS_ASSERT_EQUALS(sfxn, mover.get_sfxn());
+		TS_ASSERT_EQUALS(15, mover.get_num_iterations());
+    }
+};
+
 
 		
  
-};
+

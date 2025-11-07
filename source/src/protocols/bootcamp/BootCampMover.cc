@@ -22,7 +22,7 @@
 #include <basic/Tracer.hh>
 #include <utility/tag/Tag.hh>
 #include <utility/pointer/memory.hh>
-
+#include <protocols/moves/mover_schemas.hh>
 // XSD Includes
 #include <utility/tag/XMLSchemaGeneration.hh>
 #include <protocols/moves/mover_schemas.hh> 
@@ -45,6 +45,8 @@
 #include <core/optimization/MinimizerOptions.hh>
 #include <core/pose/variant_util.hh>
 #include <protocols/bootcamp/fold_tree_from_ss.hh>
+#include <protocols/rosetta_scripts/util.hh>
+// #include <utility/tag/Tag.hh>
 
 
 // Citation Manager
@@ -169,10 +171,28 @@ BootCampMover::show(std::ostream & output) const
 /// @brief parse XML tag (to use this Mover in Rosetta Scripts)
 void
 BootCampMover::parse_my_tag(
-	utility::tag::TagCOP ,
-	basic::datacache::DataMap&
-) {
+	utility::tag::TagCOP tag,
+	basic::datacache::DataMap & datamap
+) 
+{
+	if ( tag->hasOption("num_iterations") ) {
+		num_iterations_ = tag->getOption<core::Size>("num_iterations",1);
+		runtime_assert( num_iterations_ > 0 );
+	}
+	parse_score_function( tag, datamap );
 
+}
+
+/// @brief parse "scorefxn" XML option (can be employed virtually by derived Packing movers)
+void
+BootCampMover::parse_score_function(
+	TagCOP const tag,
+	basic::datacache::DataMap const & datamap
+)
+{
+	ScoreFunctionOP new_score_function( protocols::rosetta_scripts::parse_score_function( tag, datamap ) );
+	if ( new_score_function == nullptr ) return;
+	else{sfxn_ = new_score_function;}
 }
 void BootCampMover::provide_xml_schema( utility::tag::XMLSchemaDefinition & xsd )
 {

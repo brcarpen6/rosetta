@@ -80,6 +80,11 @@ int main(int argc, char ** argv) {
 
    protocols::bootcamp::BootCampMoverOP bootcamp_mover( new protocols::bootcamp::BootCampMover() );
    bootcamp_mover->apply( *mypose );
+
+   const core::Size num_iterations = 10
+   bootcamp_mover->set_num_iterations(num_iterations);
+   bootcamp_mover->set_sfxn(get_score_function());
+   
    protocols::jd2::JobDistributor::get_instance()->go(bootcamp_mover);
 
 }

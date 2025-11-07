@@ -282,7 +282,7 @@ public:
 	void prepare_for_output( XMLSchemaDefinition & xsd ) const override;
 
 private:
-	std::string name_;
+	std::string name_; 
 	XMLSchemaType type_;
 	std::string default_value_;
 	bool is_required_;
