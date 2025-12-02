@@ -25,7 +25,11 @@
 #include <basic/options/keys/OptionKeys.hh>
 #include <utility/options/OptionCollection.hh>
 #include <basic/options/option_macros.hh>
+
 // Rosetta headers
+#include <core/conformation/Residue.hh>
+#include <core/conformation/Conformation.hh>
+
 #include <core/pose/Pose.hh>
 #include <core/import_pose/import_pose.hh>
 #include <core/types.hh>
@@ -42,7 +46,11 @@
 #include <core/kinematics/MoveMap.hh>
 #include <core/optimization/AtomTreeMinimizer.hh>
 #include <core/optimization/MinimizerOptions.hh>
+#include <core/optimization/atom_tree_minimize.hh>
 
+// NEW: for torsion / DOF derivative evaluation
+#include <core/id/TorsionID.hh>
+#include <core/id/DOF_ID.hh>
 
 using namespace std;
 using namespace core::import_pose;
@@ -60,10 +68,10 @@ int main(int argc, char ** argv) {
     devel::init (argc, argv);
 
     utility::vector1<string> filenames = basic::options::option[
-    basic::options::OptionKeys::in::file::s ].value();
+        basic::options::OptionKeys::in::file::s ].value();
 
     if (filenames.size() > 0) {
-        cout << "You entered: " << filenames[ 1 ] << "as the PDB file to be read" << endl;   
+        cout << "You entered: " << filenames[ 1 ] << " as the PDB file to be read" << endl;
     } else{
         cout << "You didn't provide a PDB file with the -in::file::s option" << endl;
         return 1;
@@ -80,50 +88,83 @@ int main(int argc, char ** argv) {
     core::optimization::MinimizerOptions min_opts( "lbfgs_armijo_atol", 0.01, true );
     core::optimization::AtomTreeMinimizer atm;
 
-    MonteCarlo mc(*mypose, *sfxn, 1.0);
-
     PyMOLObserverOP the_observer = AddPyMOLObserver( *mypose, true, 0);
     the_observer -> pymol().apply(*mypose);
 
-    Pose copy_pose = *mypose;
+    // Minimize
+    atm.run( *mypose, mm, *sfxn, min_opts );
 
-    for(int i = 1; i <= 10; ++i){
-        
+    // === DERIVATIVES SECTION (replaced F1/F2 + eval_atom_derivative) ===
+    // Use eval_dof_derivative to get dE/dphi for each residue
 
-        double uniform_random_number = uniform();
-        core::Size N = mypose->size();
-        core::Size randres = static_cast<core::Size> (uniform_random_number * N + 1);
-        core::Real pert1 = gaussian();
-        core::Real pert2 = gaussian();
-        core::Real orig_phi = mypose->phi( randres );
-        core::Real orig_psi = mypose->psi( randres );
+    sfxn->setup_for_derivatives( *mypose );
 
-        mypose->set_phi( randres, orig_phi + pert1);
-        mypose->set_psi( randres, orig_psi + pert1);
+    for ( core::Size res = 1; res <= mypose->total_residue(); ++res ) {
 
-        PackerTaskOP repack_task = TaskFactory::create_packer_task(*mypose);
-        repack_task-> restrict_to_repacking();
-        core::pack::pack_rotamers(*mypose, *sfxn, repack_task);
+        // Only consider protein residues with backbone torsions
+        if ( !mypose->residue( res ).is_protein() ) continue;
 
-        copy_pose = *mypose;
-        atm.run( copy_pose, mm, *sfxn, min_opts );
-        *mypose = copy_pose;
+        // Backbone torsion 1 = phi
+        core::id::TorsionID torsion_id(
+            res,
+            core::id::BB, // backbone torsion
+            1             // phi = 1, psi = 2, omega = 3
+        );
 
-        core::Real score = sfxn -> score ( *mypose );
+        // Use the conformation to get the corresponding DOF_ID (old API compatible)
+        // core::id::DOF_ID dof_id = mypose->conformation().dof_id( torsion_id );
+        // core::id::DOF_ID dof_id = mypose->dof_id_from_torsion_id( torsion_id );
+        core::id::DOF_ID dof_id = mypose->conformation().dof_id_from_torsion_id( torsion_id );
 
 
-        mc.boltzmann(*mypose);
+        core::Real dE_dphi = sfxn->eval_dof_derivative(
+            dof_id,
+            torsion_id,
+            *mypose
+        );
 
-        TR << "Cycle: " << i << " score: " << score << " best: " << mc.lowest_score() << endl;
+        std::cout << "Residue " << res << " dE/dphi = " << dE_dphi << std::endl;
     }
 
-    
+    sfxn->finalize_after_derivatives( *mypose );
+    // === END DERIVATIVES SECTION ===
+
+    // Dump minimized structure
+    std::string const out_pdb = "minimized_atomtree.pdb";
+    mypose->dump_pdb( out_pdb );
+    std::cout << "Minimized structure written to " << out_pdb << std::endl;
+
+    return 0;
 
 
 
+    // Pose copy_pose = *mypose;
 
-        
-
-    
+    // for(int i = 1; i <= 10; ++i){
+    //     double uniform_random_number = uniform();
+    //     core::Size N = mypose->size();
+    //     core::Size randres = static_cast<core::Size> (uniform_random_number * N + 1);
+    //     core::Real pert1 = gaussian();
+    //     core::Real pert2 = gaussian();
+    //     core::Real orig_phi = mypose->phi( randres );
+    //     core::Real orig_psi = mypose->psi( randres );
+    //
+    //     mypose->set_phi( randres, orig_phi + pert1);
+    //     mypose->set_psi( randres, orig_psi + pert1);
+    //
+    //     PackerTaskOP repack_task = TaskFactory::create_packer_task(*mypose);
+    //     repack_task->restrict_to_repacking();
+    //     core::pack::pack_rotamers(*mypose, *sfxn, repack_task);
+    //
+    //     copy_pose = *mypose;
+    //     atm.run( copy_pose, mm, *sfxn, min_opts );
+    //     *mypose = copy_pose;
+    //
+    //     core::Real score = sfxn->score( *mypose );
+    //
+    //     mc.boltzmann(*mypose);
+    //
+    //     TR << "Cycle: " << i << " score: " << score << " best: " << mc.lowest_score() << endl;
+    // }
 
 }
